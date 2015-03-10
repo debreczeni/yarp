@@ -5,6 +5,6 @@ require 'dotenv'
 Dotenv.load!
 
 require 'yarp/app'
-require 'yarp/initializers/new_relic'
+#require 'yarp/initializers/new_relic'
 
 run Yarp::App
