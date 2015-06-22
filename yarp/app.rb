@@ -61,7 +61,7 @@ module Yarp
         uri = URI("#{RUBYGEMS_URL}#{path}")
         Log.debug "FETCH #{uri}"
         response = fetch_with_redirects(uri)
-        
+
         kept_headers = response.to_hash.slice('content-type', 'server', 'date')
         if response.code != '200'
           return [response.code.to_i, response.to_hash, response.body.to_s]
@@ -69,7 +69,7 @@ module Yarp
 
         [kept_headers, response.body]
       end
-      
+
       [200, headers, payload]
     end
 
@@ -101,7 +101,7 @@ module Yarp
           return response
         end
       end
-      raise RuntimeError('too many HTTP redirects') if limit == 0
+      raise(RuntimeError, 'too many HTTP redirects') if limit == 0
     end
 
     Cache = Yarp::Cache::Tee.new(
@@ -111,8 +111,8 @@ module Yarp
         null:     Yarp::Cache::Null.new
       },
       condition: lambda { |key, value|
-        value.last.length <= CACHE_THRESHOLD ? 
-          ENV['YARP_SMALL_CACHE'].to_sym : 
+        value.last.length <= CACHE_THRESHOLD ?
+          ENV['YARP_SMALL_CACHE'].to_sym :
           ENV['YARP_LARGE_CACHE'].to_sym
       })
 
