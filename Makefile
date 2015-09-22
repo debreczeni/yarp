@@ -4,7 +4,7 @@ build:
 
 run:
 	docker inspect memcached > /dev/null 2>&1 || docker run --name memcached -p 11211:11211 -d memcached
-	docker inspect yarp-data > /dev/null 2>&1 || docker run --name yarp-data busybox mkdir -p /cache
+	docker inspect yarp-data > /dev/null 2>&1 || docker run --name yarp-data -v /cache busybox mkdir -p /cache
 	( docker inspect yarp > /dev/null 2>&1 && docker stop yarp || true ) || true
 	( docker inspect yarp > /dev/null 2>&1 && docker rm yarp  || true ) || true
 	sleep 1
