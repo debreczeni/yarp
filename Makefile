@@ -3,7 +3,7 @@ build:
 	docker build -t ianblenke/yarp .
 
 run:
-	docker inspect memcached > /dev/null 2>&1 || docker run --name memcached -p 11211:11211 -d memcached
+	docker inspect yarp-memcached > /dev/null 2>&1 || docker run --name yarp-memcached --restart always -d memcached
 	docker inspect yarp-data > /dev/null 2>&1 || docker run --name yarp-data -v /cache busybox mkdir -p /cache
 	( docker inspect yarp > /dev/null 2>&1 && docker stop yarp || true ) || true
 	( docker inspect yarp > /dev/null 2>&1 && docker rm yarp  || true ) || true
@@ -16,12 +16,12 @@ run:
 		-e YARP_FILECACHE_MAX_BYTES=250000000 \
 		-e YARP_FILECACHE_PATH=/cache \
 		-e YARP_UPSTREAM=https://rubygems.org \
-		-e MEMCACHIER_SERVERS=memcached:11211 \
+		-e MEMCACHIER_SERVERS=yarp-memcached:11211 \
 		-e PORT=24591 \
 		-e UNICORN_KEEPALIVE=20 \
 		-e UNICORN_THREADS=10 \
 		-e UNICORN_TIMEOUT=30 \
 		-e UNICORN_WORKERS=2 \
 		--volumes-from yarp-data \
-		--link memcached:memcached \
+		--link yarp-memcached:yarp-memcached \
 		ianblenke/yarp
